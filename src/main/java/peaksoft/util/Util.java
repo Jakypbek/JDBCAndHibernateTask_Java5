@@ -7,7 +7,7 @@ import java.sql.SQLException;
 public class Util {
     // реализуйте настройку соеденения с БД
 
-    private static final String url = "jdbc:postgresql://localhost:5432/home_work";
+    private static final String url = "jdbc:postgresql://localhost:5432/example-2";
 
     private static final String userName = "postgres";
     private static final String password = "ailin154896";

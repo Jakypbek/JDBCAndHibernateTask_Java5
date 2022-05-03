@@ -111,90 +111,17 @@ public class UserDaoJdbcImpl implements UserDao {
     }
 
     public boolean existsByFirstName(String firstName) {
-        // eger databasede parametrine kelgen firstnamege okshosh adam bar bolso
-        // anda true kaitarsyn
-        // jok bolso anda false kaitarsyn.
+        String sql = """
+                    SELECT name FROM users 
+                    WHERE name LIKE ?;
+                    """;
+        try (PreparedStatement preparedStatement = Util.getConnection().prepareStatement(sql)) {
 
-        String sql1 = """
-                SELECT * FROM users
-                WHERE name LIKE '?%';
-                """ ;
-        String sql2 = """
-                SELECT * FROM users
-                WHERE name LIKE '%?%';
-                """;
-        String sql3 = """
-                SELECT * FROM users
-                WHERE name LIKE '?_';
-                """;
-        String sql4 = """
-                SELECT * FROM users
-                WHERE name LIKE '_?';
-                """;
-
-        String sql5 = """       
-                SELECT * FROM users
-                WHERE name LIKE '_?_';
-                """;
-
-            try (PreparedStatement ps = Util.getConnection().prepareStatement(sql1)) {
-                ps.setString(1, firstName);
-                ResultSet rs = ps.executeQuery(sql1);
-                rs.next();
-                if (rs.getString("name").toLowerCase().contains(firstName)) {
-                    return true;
-                } else {
-                    try (PreparedStatement psa = Util.getConnection().prepareStatement(sql2)) {
-                        psa.setString(1, firstName);
-                        ResultSet rss = psa.executeQuery(sql2);
-                        rss.next();
-                        if (rss.getString("name").toLowerCase().contains(firstName)) {
-                            return true;
-                        } else {
-                            try (PreparedStatement psq = Util.getConnection().prepareStatement(sql3)) {
-                                psq.setString(1, firstName);
-                                ResultSet rse = psq.executeQuery(sql3);
-                                rse.next();
-                                if (rse.getString("name").toLowerCase().contains(firstName)) {
-                                    return true;
-                                } else {
-                                    try (PreparedStatement pst = Util.getConnection().prepareStatement(sql4)) {
-                                        pst.setString(1, firstName);
-                                        ResultSet rsy = psa.executeQuery(sql4);
-                                        rsy.next();
-                                        if (rsy.getString("name").toLowerCase().contains(firstName)) {
-                                            return true;
-                                        } else {
-                                            try (PreparedStatement psi = Util.getConnection().prepareStatement(sql5)) {
-                                                psi.setString(1, firstName);
-                                                ResultSet rso = psi.executeQuery(sql5);
-                                                rso.next();
-                                                if (rso.getString("name").toLowerCase().contains(firstName)) {
-                                                    return true;
-                                                }
-                                            } catch (SQLException er) {
-                                                er.printStackTrace();
-                                            }
-                                        }
-                                    } catch (SQLException er) {
-                                        er.printStackTrace();
-                                    }
-                                }
-
-                            } catch(SQLException e){
-                                e.printStackTrace();
-                            }
-                        }
-                    } catch (SQLException er) {
-                        er.printStackTrace();
-                    }
-                }
-
-                } catch(SQLException e){
-                    e.printStackTrace();
-            }
-
-
-        return false;
+            preparedStatement.setString(1,  "%" + firstName + "%");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return resultSet.next();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -15,12 +15,13 @@ public class Main {
         userService.saveUser("Salvador", "Dali", (byte) 101);
         userService.saveUser("Mona", "Lisa", (byte) 23);
 
-        System.out.println(userService.getAllUsers());
+//        System.out.println(userService.getAllUsers());
+//
+//        userService.cleanUsersTable();
+//
+//        userService.dropUsersTable();
 
-        userService.cleanUsersTable();
 
-        userService.dropUsersTable();
-
-
+        System.out.println(userService.existsByFirstName("Ch"));
     }
 }
